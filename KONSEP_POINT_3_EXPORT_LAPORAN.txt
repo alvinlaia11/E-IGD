@@ -1,0 +1,80 @@
+================================================================================
+                    KONSEP POINT 3: FITUR EXPORT LAPORAN
+================================================================================
+
+DESKRIPSI FITUR
+================================================================================
+Fitur export laporan memungkinkan user untuk mengekspor data pasien dan 
+laporan ke dalam format file yang dapat dibagikan atau diarsipkan, seperti:
+- PDF (Portable Document Format)
+- Excel/CSV (untuk analisis data)
+- Text/Plain (untuk backup sederhana)
+
+JENIS EXPORT
+================================================================================
+1. EXPORT LAPORAN HARIAN
+   - Export data pasien berdasarkan tanggal tertentu
+   - Format: PDF dengan layout rapi
+   - Berisi: Total pasien, statistik triage, statistik status
+   
+2. EXPORT DATA PASIEN
+   - Export semua data pasien atau data terfilter
+   - Format: Excel/CSV untuk analisis
+   - Berisi: Semua field pasien dalam format tabel
+
+3. EXPORT BACKUP DATA
+   - Export semua data untuk backup
+   - Format: JSON atau CSV
+   - Dapat diimport kembali jika diperlukan
+
+KONSEP DESAIN
+================================================================================
+
+A. TOMBOL EXPORT DI HALAMAN LAPORAN
+   - Tombol "Export" di AppBar atau di card laporan
+   - Dialog pilihan format (PDF, Excel, CSV)
+   - Loading indicator saat proses export
+   - Notifikasi sukses setelah export
+
+B. DIALOG PILIHAN FORMAT
+   - Pilihan format: PDF, Excel, CSV
+   - Preview informasi yang akan diexport
+   - Tombol "Export" untuk konfirmasi
+   - Tombol "Batal" untuk membatalkan
+
+C. FILE HANDLER
+   - Save file ke storage lokal
+   - Share file ke aplikasi lain
+   - Open file dengan aplikasi default
+
+FITUR TEKNIS
+================================================================================
+
+1. PDF EXPORT
+   - Library: pdf atau printing
+   - Layout: Header, tabel data, footer
+   - Styling: Sesuai tema aplikasi
+
+2. EXCEL/CSV EXPORT
+   - Library: excel atau csv
+   - Format: Tabel dengan header
+   - Encoding: UTF-8 untuk support karakter Indonesia
+
+3. FILE SHARING
+   - Share file ke aplikasi lain
+   - Save ke Downloads folder
+   - Permission handling untuk storage
+
+KEUNTUNGAN FITUR INI
+================================================================================
+
+1. BACKUP: Data dapat di-backup secara berkala
+2. SHARING: Data dapat dibagikan ke pihak lain
+3. ANALISIS: Data dapat dianalisis di Excel
+4. ARSIP: Data dapat diarsipkan untuk keperluan dokumentasi
+5. COMPLIANCE: Memenuhi kebutuhan dokumentasi medis
+
+================================================================================
+                        END OF CONCEPT
+================================================================================
+

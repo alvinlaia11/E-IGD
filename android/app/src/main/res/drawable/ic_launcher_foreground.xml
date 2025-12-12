@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="108dp"
+    android:height="108dp"
+    android:viewportWidth="108"
+    android:viewportHeight="108">
+    
+    <!-- Background putih untuk kotak E dengan rounded corners -->
+    <path
+        android:fillColor="#FFFFFF"
+        android:pathData="M20,20 L20,88 L88,88 L88,20 Z"
+        android:strokeWidth="3"
+        android:strokeColor="#D32F2F"/>
+    
+    <!-- Rounded corners untuk kotak -->
+    <path
+        android:fillColor="#FFFFFF"
+        android:pathData="M20,20 Q20,20 24,20 L84,20 Q88,20 88,24 L88,84 Q88,88 84,88 L24,88 Q20,88 20,84 Z"/>
+    
+    <!-- Huruf E - lebih tebal dan jelas -->
+    <group>
+        <!-- Batang vertikal E (lebih tebal) -->
+        <path
+            android:fillColor="#D32F2F"
+            android:pathData="M30,28 L30,80 L42,80 L42,28 Z"/>
+        
+        <!-- Garis horizontal atas E -->
+        <path
+            android:fillColor="#D32F2F"
+            android:pathData="M30,28 L78,28 L78,40 L30,40 Z"/>
+        
+        <!-- Garis horizontal tengah E -->
+        <path
+            android:fillColor="#D32F2F"
+            android:pathData="M30,50 L70,50 L70,58 L30,58 Z"/>
+        
+        <!-- Garis horizontal bawah E -->
+        <path
+            android:fillColor="#D32F2F"
+            android:pathData="M30,68 L78,68 L78,80 L30,80 Z"/>
+    </group>
+</vector>
+

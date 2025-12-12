@@ -1,0 +1,428 @@
+================================================================================
+                    KONSEP FITUR TELEKONSULTASI MEDIS
+                          Aplikasi E-IGD
+================================================================================
+
+1. OVERVIEW FITUR
+================================================================================
+
+Telekonsultasi Medis adalah fitur yang memungkinkan pasien atau petugas medis
+untuk melakukan konsultasi medis secara virtual melalui aplikasi E-IGD. Fitur
+ini dirancang untuk:
+
+- Mempercepat akses konsultasi medis tanpa harus datang ke IGD
+- Meningkatkan efisiensi penanganan pasien non-emergency
+- Mengurangi beban IGD fisik dengan menangani kasus ringan secara virtual
+- Memberikan akses konsultasi medis 24/7
+- Terintegrasi dengan sistem triage dan tracking pasien yang sudah ada
+
+2. TUJUAN DAN MANFAAT
+================================================================================
+
+2.1 Tujuan Utama:
+- Memfasilitasi konsultasi medis jarak jauh
+- Menyediakan akses cepat ke dokter/tenaga medis
+- Mengintegrasikan konsultasi virtual dengan sistem IGD
+- Meningkatkan efisiensi pelayanan kesehatan
+
+2.2 Manfaat:
+- Pasien: Konsultasi tanpa harus datang ke rumah sakit
+- Petugas: Dapat menangani lebih banyak pasien secara efisien
+- Rumah Sakit: Mengurangi antrian di IGD fisik
+- Sistem: Data konsultasi terintegrasi dengan database pasien
+
+3. FITUR-FITUR UTAMA
+================================================================================
+
+3.1 MODUL PASIEN (User Side)
+----------------------------
+
+A. Halaman Daftar Konsultasi
+   - List konsultasi aktif (sedang berlangsung)
+   - List konsultasi selesai (riwayat)
+   - Filter berdasarkan status (Menunggu, Berlangsung, Selesai)
+   - Search konsultasi berdasarkan tanggal/nama dokter
+   - Badge notifikasi untuk konsultasi baru
+
+B. Halaman Buat Konsultasi Baru
+   - Form input keluhan utama
+   - Pilih jenis konsultasi:
+     * Konsultasi Umum
+     * Konsultasi Spesialis (jika ada)
+     * Konsultasi Gawat Darurat (urgent)
+   - Upload foto/video gejala (opsional)
+   - Input informasi tambahan:
+     * Riwayat penyakit
+     * Obat yang sedang dikonsumsi
+     * Alergi
+   - Pilih prioritas (Normal/Urgent)
+   - Tombol "Mulai Konsultasi"
+
+C. Halaman Konsultasi Aktif
+   - Chat interface dengan dokter
+   - Video call button (jika tersedia)
+   - Voice call button (jika tersedia)
+   - Upload file (foto, video, dokumen medis)
+   - Status konsultasi (Menunggu dokter, Berlangsung, Selesai)
+   - Timer durasi konsultasi
+   - Tombol "Akhiri Konsultasi"
+   - Tombol "Minta Rujukan ke IGD" (jika diperlukan)
+
+D. Halaman Detail Konsultasi (Riwayat)
+   - Informasi konsultasi:
+     * Tanggal & waktu
+     * Nama dokter
+     * Keluhan utama
+     * Diagnosis (jika sudah ada)
+     * Resep obat (jika ada)
+     * Rekomendasi tindakan
+   - Chat history lengkap
+   - File yang diupload
+   - Tombol "Download Resep" (PDF)
+   - Tombol "Cetak Laporan Konsultasi"
+
+3.2 MODUL DOKTER/PETUGAS (Admin Side)
+--------------------------------------
+
+A. Dashboard Konsultasi
+   - Statistik konsultasi hari ini:
+     * Total konsultasi
+     * Konsultasi menunggu
+     * Konsultasi berlangsung
+     * Konsultasi selesai
+   - Notifikasi konsultasi baru
+   - List konsultasi menunggu (prioritas tinggi di atas)
+   - Quick action: Terima konsultasi
+
+B. Halaman List Konsultasi
+   - Filter berdasarkan:
+     * Status (Menunggu, Berlangsung, Selesai)
+     * Prioritas (Normal, Urgent)
+     * Tanggal
+   - Search berdasarkan nama pasien
+   - Sort berdasarkan prioritas/waktu
+   - Badge untuk konsultasi urgent
+
+C. Halaman Konsultasi Aktif (Dokter)
+   - Chat interface dengan pasien
+   - Video call button
+   - Voice call button
+   - View file yang diupload pasien
+   - Form input diagnosis
+   - Form input resep obat:
+     * Nama obat
+     * Dosis
+     * Aturan pakai
+     * Jumlah
+   - Form rekomendasi tindakan
+   - Tombol "Rujuk ke IGD" (jika perlu penanganan fisik)
+   - Tombol "Selesai Konsultasi"
+   - Tombol "Simpan Catatan Medis"
+
+D. Halaman Riwayat Konsultasi
+   - List semua konsultasi yang pernah ditangani
+   - Filter dan search
+   - Export laporan konsultasi
+
+3.3 FITUR INTEGRASI DENGAN SISTEM E-IGD
+----------------------------------------
+
+A. Integrasi dengan Triage System
+   - Konsultasi dapat dikonversi menjadi pasien IGD
+   - Auto-set triage level berdasarkan hasil konsultasi:
+     * MERAH: Jika dokter menyarankan rujuk ke IGD urgent
+     * KUNING: Jika perlu penanganan segera
+     * HIJAU: Jika sudah ditangani via konsultasi
+   - Data konsultasi menjadi bagian dari riwayat pasien
+
+B. Integrasi dengan Database Pasien
+   - Jika pasien sudah terdaftar, data konsultasi ditambahkan ke riwayat
+   - Jika pasien baru, buat record pasien baru dari konsultasi
+   - Link konsultasi dengan ID pasien
+
+C. Notifikasi dan Alert
+   - Notifikasi ke dokter saat ada konsultasi baru
+   - Notifikasi ke pasien saat dokter merespons
+   - Alert jika konsultasi urgent lebih dari X menit belum ditangani
+   - Notifikasi saat konsultasi dikonversi ke IGD
+
+4. USER FLOW / JOURNEY
+================================================================================
+
+4.1 Flow Pasien - Membuat Konsultasi
+-------------------------------------
+1. User buka aplikasi E-IGD
+2. Pilih menu "Telekonsultasi" di bottom navigation atau dashboard
+3. Klik tombol "Konsultasi Baru"
+4. Isi form:
+   - Keluhan utama (wajib)
+   - Jenis konsultasi
+   - Upload foto/video (opsional)
+   - Informasi tambahan
+   - Prioritas
+5. Klik "Mulai Konsultasi"
+6. Sistem mencari dokter yang tersedia
+7. Jika dokter tersedia: Langsung masuk ke chat
+8. Jika tidak tersedia: Masuk antrian, notifikasi saat dokter ready
+9. Konsultasi berlangsung (chat/video/voice)
+10. Dokter memberikan diagnosis dan resep
+11. Konsultasi selesai
+12. Pasien dapat download resep dan laporan
+
+4.2 Flow Dokter - Menangani Konsultasi
+---------------------------------------
+1. Dokter buka aplikasi
+2. Masuk ke dashboard konsultasi
+3. Lihat list konsultasi menunggu
+4. Pilih konsultasi (prioritas urgent di atas)
+5. Klik "Terima Konsultasi"
+6. Masuk ke halaman chat konsultasi
+7. Baca keluhan dan file yang diupload pasien
+8. Mulai chat/video call dengan pasien
+9. Input diagnosis
+10. Input resep (jika perlu)
+11. Berikan rekomendasi
+12. Jika perlu rujuk ke IGD: Klik "Rujuk ke IGD"
+13. Klik "Selesai Konsultasi"
+14. Data konsultasi tersimpan di database
+
+4.3 Flow Rujukan ke IGD
+-----------------------
+1. Dokter klik "Rujuk ke IGD" di konsultasi
+2. Dialog konfirmasi muncul
+3. Dokter pilih triage level (MERAH/KUNING/HIJAU)
+4. Dokter input catatan rujukan
+5. Sistem membuat pasien baru di IGD dengan:
+   - Data dari konsultasi
+   - Triage level yang dipilih
+   - Status: MENUNGGU
+   - Catatan rujukan dari konsultasi
+6. Notifikasi ke pasien: "Anda dirujuk ke IGD, silakan datang"
+7. Pasien muncul di dashboard IGD sebagai pasien baru
+
+5. STRUKTUR DATA
+================================================================================
+
+5.1 Entity: Teleconsultation
+-----------------------------
+- id (int, primary key)
+- patientId (int, foreign key ke Patient, nullable jika pasien baru)
+- patientName (String, wajib)
+- patientPhone (String)
+- patientEmail (String)
+- doctorId (int, foreign key ke User/Dokter)
+- doctorName (String)
+- complaint (String) - keluhan utama
+- consultationType (enum: Umum, Spesialis, GawatDarurat)
+- priority (enum: Normal, Urgent)
+- status (enum: Menunggu, Berlangsung, Selesai, Dibatalkan)
+- diagnosis (String, nullable)
+- prescription (JSON/Text, nullable) - resep obat
+- recommendation (String, nullable) - rekomendasi tindakan
+- referredToIGD (bool) - apakah dirujuk ke IGD
+- igdPatientId (int, nullable) - ID pasien di IGD jika dirujuk
+- triageLevel (enum, nullable) - triage jika dirujuk
+- startTime (DateTime)
+- endTime (DateTime, nullable)
+- duration (int, seconds)
+- createdAt (DateTime)
+- updatedAt (DateTime)
+
+5.2 Entity: ConsultationMessage (Chat)
+---------------------------------------
+- id (int, primary key)
+- consultationId (int, foreign key)
+- senderId (int) - user ID pengirim
+- senderType (enum: Patient, Doctor)
+- message (String)
+- messageType (enum: Text, Image, Video, File, System)
+- fileUrl (String, nullable)
+- timestamp (DateTime)
+
+5.3 Entity: ConsultationFile
+------------------------------
+- id (int, primary key)
+- consultationId (int, foreign key)
+- fileName (String)
+- fileType (enum: Image, Video, Document)
+- fileUrl (String)
+- uploadedBy (int) - user ID
+- uploadedAt (DateTime)
+
+6. UI/UX DESIGN CONSIDERATIONS
+================================================================================
+
+6.1 Halaman Utama Telekonsultasi (Pasien)
+------------------------------------------
+- Card besar "Konsultasi Baru" dengan icon stetoskop
+- List konsultasi aktif (jika ada)
+- List riwayat konsultasi (scrollable)
+- Badge notifikasi untuk konsultasi baru
+- Color scheme: Hijau untuk kesehatan (beda dengan merah emergency)
+
+6.2 Halaman Chat Konsultasi
+----------------------------
+- Design mirip WhatsApp/Telegram
+- Bubble chat berbeda warna untuk pasien dan dokter
+- Timestamp untuk setiap pesan
+- Indicator "typing..." saat dokter mengetik
+- Indicator "read" untuk pesan yang sudah dibaca
+- Quick action buttons:
+  * Upload foto
+  * Upload video
+  * Upload dokumen
+  * Video call
+  * Voice call
+- Status bar di atas: "Konsultasi dengan Dr. [Nama]"
+- Timer durasi konsultasi
+
+6.3 Halaman Form Konsultasi Baru
+---------------------------------
+- Form yang clean dan mudah diisi
+- Upload area untuk foto/video dengan preview
+- Auto-save draft (jika user keluar sebelum submit)
+- Validation yang jelas
+
+6.4 Dashboard Dokter
+---------------------
+- Card statistik di atas
+- List konsultasi menunggu dengan badge urgent
+- Color coding: Merah untuk urgent, kuning untuk normal
+- Quick action: "Terima" button di setiap item
+
+7. TEKNIS IMPLEMENTASI
+================================================================================
+
+7.1 Teknologi yang Diperlukan
+------------------------------
+- Real-time messaging: Firebase Cloud Messaging (FCM) atau WebSocket
+- Video call: Agora.io, Twilio, atau Jitsi Meet
+- Voice call: Agora.io atau Twilio
+- File storage: Firebase Storage atau AWS S3
+- Push notifications: FCM
+- State management: Provider (sudah digunakan)
+- Local database: SQLite (sudah digunakan) untuk offline support
+
+7.2 Arsitektur
+--------------
+- Feature: teleconsultation
+  - domain/
+    - entities/
+      - teleconsultation.dart
+      - consultation_message.dart
+      - consultation_file.dart
+    - usecases/
+      - create_consultation.dart
+      - get_consultations.dart
+      - send_message.dart
+      - end_consultation.dart
+      - refer_to_igd.dart
+  - data/
+    - models/
+      - teleconsultation_model.dart
+      - consultation_message_model.dart
+    - datasources/
+      - teleconsultation_local_datasource.dart
+      - teleconsultation_remote_datasource.dart (jika ada backend)
+    - repositories/
+      - teleconsultation_repository_impl.dart
+  - presentation/
+    - pages/
+      - teleconsultation_home_page.dart
+      - consultation_form_page.dart
+      - consultation_chat_page.dart
+      - consultation_history_page.dart
+      - doctor_consultation_dashboard.dart
+      - doctor_consultation_list_page.dart
+    - widgets/
+      - consultation_card.dart
+      - message_bubble.dart
+      - file_upload_widget.dart
+    - providers/
+      - consultation_notifier.dart
+      - chat_notifier.dart
+
+7.3 Integrasi dengan Sistem Existing
+--------------------------------------
+- Extend Patient entity dengan field:
+  * consultationHistory (List<Teleconsultation>)
+  * hasActiveConsultation (bool)
+- Update PatientListNotifier untuk include konsultasi
+- Update Dashboard untuk show statistik konsultasi
+- Update Report untuk include data konsultasi
+
+8. FITUR TAMBAHAN (FUTURE ENHANCEMENT)
+================================================================================
+
+8.1 Fitur Lanjutan
+------------------
+- AI Chatbot untuk triage awal (sebelum ke dokter)
+- Integrasi dengan apotek online untuk pembelian obat
+- Reminder untuk minum obat
+- Follow-up konsultasi otomatis
+- Integrasi dengan rekam medis elektronik (EMR)
+- Multi-language support
+- Voice-to-text untuk input keluhan
+- Integrasi dengan wearable devices (heart rate, etc.)
+
+8.2 Analytics
+-------------
+- Dashboard analytics untuk admin:
+  * Total konsultasi per hari/bulan
+  * Rata-rata durasi konsultasi
+  * Jumlah rujukan ke IGD
+  * Rating kepuasan pasien
+  * Waktu respon dokter
+
+9. PRIORITAS IMPLEMENTASI
+================================================================================
+
+Phase 1 (MVP - Minimum Viable Product):
+- Form konsultasi baru
+- Chat interface dasar (text only)
+- List konsultasi untuk pasien dan dokter
+- Status konsultasi (Menunggu, Berlangsung, Selesai)
+- Integrasi rujukan ke IGD
+- Basic notification
+
+Phase 2:
+- Upload file (foto, video, dokumen)
+- Form diagnosis dan resep
+- Video call integration
+- Voice call integration
+- Download resep (PDF)
+
+Phase 3:
+- Advanced features
+- Analytics dashboard
+- AI chatbot
+- Integrasi apotek online
+
+10. KEAMANAN DAN PRIVASI
+================================================================================
+
+- Enkripsi data konsultasi (end-to-end jika memungkinkan)
+- Autentikasi dokter (verifikasi identitas)
+- Log semua aktivitas konsultasi
+- Compliance dengan regulasi kesehatan (HIPAA equivalent di Indonesia)
+- Consent pasien sebelum konsultasi
+- Data retention policy
+- Secure file storage
+
+11. TESTING SCENARIOS
+================================================================================
+
+- Test membuat konsultasi baru
+- Test chat real-time
+- Test upload file
+- Test rujukan ke IGD
+- Test notifikasi
+- Test video/voice call (jika sudah diimplementasi)
+- Test offline mode (simpan draft, sync saat online)
+- Test dengan banyak user simultan
+- Test error handling (network error, dll)
+
+================================================================================
+                              END OF DOCUMENT
+================================================================================
+

@@ -1,0 +1,274 @@
+================================================================================
+                    KONSEP FITUR LAYANAN AMBULANS
+          DENGAN INTEGRASI GOOGLE MAPS
+================================================================================
+
+DESKRIPSI FITUR
+================================================================================
+Fitur layanan ambulans memungkinkan user untuk memanggil ambulans dengan
+menggunakan Google Maps untuk menentukan lokasi pickup. Fitur ini dirancang
+untuk mempermudah proses pemanggilan ambulans dalam situasi emergency.
+
+FITUR UTAMA
+================================================================================
+
+1. PEMANGGILAN AMBULANS
+   - Form untuk memanggil ambulans
+   - Input lokasi pickup (dengan Google Maps)
+   - Input detail pasien dan kondisi emergency
+   - Auto-set triage: MERAH (Emergency)
+   - Status: MENUNGGU AMBULANS
+
+2. INTEGRASI GOOGLE MAPS
+   - Pilih lokasi pickup di peta
+   - Search lokasi dengan Google Places API
+   - Tampilkan lokasi saat ini (GPS)
+   - Tampilkan rute ke lokasi (opsional)
+   - Pin marker di peta untuk lokasi pickup
+
+3. INFORMASI AMBULANS
+   - Nomor telepon darurat ambulans
+   - Estimasi waktu tiba (jika ada)
+   - Status ambulans (tersedia/menuju lokasi)
+   - History pemanggilan ambulans
+
+KONSEP DESAIN
+================================================================================
+
+A. HALAMAN PEMANGGILAN AMBULANS
+   - Tombol "Panggil Ambulans" di dashboard atau menu
+   - Form dengan field:
+     * Nama Pasien (wajib)
+     * Usia (wajib)
+     * Jenis Kelamin (wajib)
+     * Kondisi Pasien (wajib)
+     * Lokasi Pickup (dengan Google Maps)
+     * Nomor Telepon Kontak (wajib)
+     * Catatan Tambahan (opsional)
+   - Triage otomatis: MERAH
+   - Status otomatis: MENUNGGU AMBULANS
+
+B. INTEGRASI GOOGLE MAPS
+   - Widget Google Maps di dalam form
+   - Search bar untuk mencari alamat
+   - Current location button (GPS)
+   - Pin marker yang bisa digeser
+   - Alamat lengkap ditampilkan di bawah peta
+   - Koordinat latitude/longitude disimpan
+
+C. FLOW PENGGUNAAN
+   1. User klik "Panggil Ambulans"
+   2. Form muncul dengan Google Maps
+   3. User pilih lokasi (search atau geser pin)
+   4. User isi data pasien
+   5. Klik "Panggil Ambulans"
+   6. Data tersimpan dengan status "MENUNGGU AMBULANS"
+   7. Notifikasi konfirmasi muncul
+   8. Data muncul di dashboard dengan badge khusus
+
+D. VISUAL DESIGN
+   - Warna merah untuk emergency
+   - Icon ambulans yang jelas
+   - Map widget yang interaktif
+   - Pin marker merah untuk lokasi pickup
+   - Search bar di atas peta
+
+FITUR TEKNIS
+================================================================================
+
+1. GOOGLE MAPS INTEGRATION
+   - Library: google_maps_flutter
+   - API Key: Google Maps API Key (perlu dibuat di Google Cloud Console)
+   - Fitur:
+     * Tampilkan peta
+     * Marker yang bisa digeser
+     * Current location
+     * Search dengan Google Places (opsional, butuh Places API)
+
+2. GPS/LOCATION
+   - Library: geolocator
+   - Permission: Location permission
+   - Fitur:
+     * Get current location
+     * Update location real-time (opsional)
+
+3. DATA STORAGE
+   - Simpan data pemanggilan ambulans ke database
+   - Field tambahan:
+     * latitude (REAL)
+     * longitude (REAL)
+     * alamat_lengkap (TEXT)
+     * nomor_telepon (TEXT)
+     * status_ambulans (TEXT) - MENUNGGU/DALAM_PERJALANAN/SAMPAI
+
+4. STATUS TRACKING
+   - Status pemanggilan:
+     * MENUNGGU AMBULANS
+     * AMBULANS DALAM PERJALANAN
+     * AMBULANS SAMPAI
+     * SELESAI
+
+KEUNTUNGAN FITUR INI
+================================================================================
+
+1. CEPAT: Pemanggilan ambulans lebih cepat dengan lokasi otomatis
+2. AKURAT: Lokasi tepat dengan GPS dan Google Maps
+3. MUDAH: User-friendly dengan peta interaktif
+4. EFEKTIF: Data tersimpan untuk tracking dan laporan
+5. INTEGRASI: Bisa dikembangkan untuk integrasi dengan sistem ambulans real
+
+ALTERNATIF IMPLEMENTASI (TANPA GOOGLE PLACES API)
+================================================================================
+
+Jika tidak ingin menggunakan Google Places API (berbayar), bisa menggunakan:
+
+1. MANUAL LOCATION INPUT
+   - User input alamat manual
+   - Geocoding untuk convert alamat ke koordinat
+   - Atau user geser pin di peta
+
+2. CURRENT LOCATION ONLY
+   - Hanya gunakan GPS untuk lokasi saat ini
+   - User konfirmasi lokasi
+   - Tidak perlu search
+
+3. SIMPLE MAP
+   - Peta dasar tanpa Places API
+   - User geser pin untuk pilih lokasi
+   - Reverse geocoding untuk dapatkan alamat dari koordinat
+
+DEPENDENCIES YANG DIPERLUKAN
+================================================================================
+
+1. google_maps_flutter: ^2.2.0
+   - Untuk menampilkan Google Maps
+   - Butuh Google Maps API Key
+
+2. geolocator: ^10.1.0
+   - Untuk mendapatkan lokasi GPS
+   - Permission handling
+
+3. geocoding: ^2.1.0 (opsional)
+   - Untuk convert alamat ke koordinat (geocoding)
+   - Untuk convert koordinat ke alamat (reverse geocoding)
+
+4. permission_handler: ^11.0.0 (opsional)
+   - Untuk handle permission location
+   - Lebih mudah dari manual permission
+
+CARA SETUP GOOGLE MAPS API
+================================================================================
+
+1. Buat project di Google Cloud Console
+2. Enable Google Maps SDK for Android
+3. Enable Google Maps SDK for iOS (jika perlu)
+4. Buat API Key
+5. Restrict API Key (opsional, untuk keamanan)
+6. Tambahkan API Key ke AndroidManifest.xml dan Info.plist
+
+PERMISSIONS YANG DIPERLUKAN
+================================================================================
+
+Android (AndroidManifest.xml):
+- android.permission.ACCESS_FINE_LOCATION
+- android.permission.ACCESS_COARSE_LOCATION
+- android.permission.INTERNET
+
+iOS (Info.plist):
+- NSLocationWhenInUseUsageDescription
+- NSLocationAlwaysUsageDescription
+
+STRUKTUR DATABASE
+================================================================================
+
+Tabel: ambulance_calls (atau extend patients table)
+
+Kolom:
+- id (INTEGER PRIMARY KEY)
+- patient_id (INTEGER, FK ke patients) - opsional
+- nama_pasien (TEXT)
+- usia (INTEGER)
+- jenis_kelamin (TEXT)
+- kondisi_pasien (TEXT)
+- latitude (REAL)
+- longitude (REAL)
+- alamat_lengkap (TEXT)
+- nomor_telepon (TEXT)
+- catatan (TEXT nullable)
+- status_ambulans (TEXT)
+- waktu_panggilan (TEXT)
+- created_at (TEXT)
+- updated_at (TEXT)
+
+ATAU extend patients table dengan:
+- latitude (REAL nullable)
+- longitude (REAL nullable)
+- alamat_lengkap (TEXT nullable)
+- nomor_telepon (TEXT nullable)
+- status_ambulans (TEXT nullable)
+
+UI/UX DESIGN
+================================================================================
+
+1. HALAMAN PEMANGGILAN AMBULANS
+   - Header merah dengan icon ambulans
+   - Google Maps widget (tinggi 300-400px)
+   - Search bar di atas peta
+   - Form input di bawah peta
+   - Tombol "Panggil Ambulans" besar dan jelas
+
+2. MAP WIDGET
+   - Peta interaktif
+   - Pin marker merah di tengah (draggable)
+   - Current location button (FAB)
+   - Zoom controls
+   - Alamat ditampilkan di bawah peta
+
+3. STATUS BADGE
+   - Badge khusus untuk pemanggilan ambulans
+   - Warna berbeda untuk setiap status
+   - Icon ambulans di card pasien
+
+INTEGRASI DENGAN SISTEM
+================================================================================
+
+1. Dashboard
+   - Badge khusus untuk pasien yang memanggil ambulans
+   - Filter untuk melihat semua pemanggilan ambulans
+   - Alert jika ada pemanggilan yang belum ditangani
+
+2. Detail Pasien
+   - Tampilkan lokasi di peta (jika ada)
+   - Tampilkan status ambulans
+   - Tombol untuk update status ambulans
+
+3. Laporan
+   - Statistik pemanggilan ambulans
+   - Filter berdasarkan tanggal
+   - Export data pemanggilan ambulans
+
+CATATAN PENTING
+================================================================================
+
+1. GOOGLE MAPS API KEY
+   - Perlu dibuat di Google Cloud Console
+   - Ada quota gratis (terbatas)
+   - Perlu billing account untuk production (tapi ada free tier)
+
+2. OFFLINE MODE
+   - Google Maps bisa cache peta untuk offline
+   - Tapi search dan geocoding perlu internet
+
+3. PRIVACY
+   - Lokasi adalah data sensitif
+   - Perlu permission yang jelas
+   - Simpan data dengan aman
+
+4. ALTERNATIF
+   - Bisa gunakan OpenStreetMap (gratis, tidak perlu API key)
+   - Library: flutter_map atau mapbox (jika perlu)
+
+================================================================================
+                        END OF CONCEPT
+================================================================================
+

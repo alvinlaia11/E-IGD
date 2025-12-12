@@ -1,0 +1,120 @@
+================================================================================
+                    KONSEP FITUR TOMBOL PANIK
+          LAYANAN GAWAT DARURAT (EMERGENCY SERVICE)
+================================================================================
+
+DESKRIPSI FITUR
+================================================================================
+Fitur tombol panik adalah fitur cepat untuk menangani kasus emergency yang
+memerlukan penanganan segera. Fitur ini dirancang untuk mempermudah input
+pasien emergency dengan form yang lebih sederhana dan cepat.
+
+JENIS LAYANAN GAWAT DARURAT
+================================================================================
+1. PENANGANAN KECELAKAAN
+   - Untuk pasien yang mengalami kecelakaan
+   - Auto-set triage: MERAH (Emergency)
+   - Form cepat dengan field minimal yang penting
+   
+2. PENANGANAN KEBAKARAN
+   - Untuk pasien yang mengalami insiden kebakaran
+   - Auto-set triage: MERAH (Emergency)
+   - Form cepat dengan field minimal yang penting
+
+KONSEP DESAIN
+================================================================================
+
+A. TOMBOL PANIK DI DASHBOARD
+   - Tombol besar dan mencolok di dashboard
+   - Warna merah dengan efek glow/pulse
+   - Icon emergency (siren/warning)
+   - Text: "TOMBOL PANIK" atau "EMERGENCY"
+   - Mudah diakses dan terlihat jelas
+   - Bisa floating button atau card besar di atas dashboard
+
+B. QUICK EMERGENCY FORM
+   - Form yang lebih sederhana dari form biasa
+   - Field minimal yang wajib:
+     * Nama Pasien (wajib)
+     * Usia (wajib)
+     * Jenis Kelamin (wajib)
+     * Jenis Emergency (Kecelakaan/Kebakaran) - auto-set
+     * Keluhan Utama (opsional, bisa diisi detail)
+   - Triage otomatis: MERAH
+   - Status otomatis: MENUNGGU
+   - Waktu kedatangan: auto DateTime.now()
+   - Tombol "Simpan Emergency" yang besar dan jelas
+
+C. FLOW PENGGUNAAN
+   1. User klik tombol panik di dashboard
+   2. Dialog muncul dengan 2 pilihan:
+      - Penanganan Kecelakaan
+      - Penanganan Kebakaran
+   3. User pilih jenis emergency
+   4. Form quick emergency muncul
+   5. User isi data minimal
+   6. Klik "Simpan Emergency"
+   7. Data tersimpan dengan triage MERAH
+   8. Kembali ke dashboard dengan notifikasi
+
+D. VISUAL DESIGN
+   - Warna merah dominan untuk emergency
+   - Icon yang jelas (kecelakaan: car-crash, kebakaran: fire)
+   - Animasi pulse pada tombol panik
+   - Alert banner setelah save
+   - Sound/vibration feedback (opsional)
+
+FITUR TEKNIS
+================================================================================
+
+1. AUTO-SET TRIAGE: MERAH
+   - Semua pasien dari tombol panik otomatis triage MERAH
+   - Tidak bisa diubah di form quick emergency
+
+2. AUTO-SET STATUS: MENUNGGU
+   - Status otomatis MENUNGGU
+   - Petugas bisa update status nanti di detail page
+
+3. KELUHAN OTOMATIS
+   - Untuk Kecelakaan: "Kecelakaan - [detail jika ada]"
+   - Untuk Kebakaran: "Kebakaran - [detail jika ada]"
+   - User bisa menambahkan detail di field keluhan
+
+4. VALIDASI MINIMAL
+   - Hanya validasi field wajib (nama, usia)
+   - Form lebih cepat untuk emergency case
+
+5. NOTIFIKASI SETELAH SAVE
+   - Snackbar: "Pasien emergency berhasil ditambahkan"
+   - Alert banner muncul di dashboard jika ada emergency waiting
+
+INTEGRASI DENGAN SISTEM
+================================================================================
+
+1. Dashboard
+   - Tombol panik mudah diakses
+   - Alert banner muncul jika ada emergency
+   - Auto-refresh setelah save emergency
+
+2. Detail Pasien
+   - Pasien emergency bisa di-edit seperti biasa
+   - Status bisa di-update
+   - Alert emergency tetap muncul jika status MENUNGGU
+
+3. Laporan
+   - Pasien emergency tercatat di laporan
+   - Bisa difilter berdasarkan triage MERAH
+
+KEUNTUNGAN FITUR INI
+================================================================================
+
+1. CEPAT: Form lebih sederhana, input lebih cepat
+2. MUDAH: Tombol panik mudah ditemukan dan diakses
+3. EFEKTIF: Auto-set triage dan status yang tepat
+4. AMAN: Validasi tetap ada untuk data penting
+5. USER-FRIENDLY: Flow yang jelas dan intuitif
+
+================================================================================
+                        END OF CONCEPT
+================================================================================
+
