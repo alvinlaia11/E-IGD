@@ -378,7 +378,7 @@ class _HomePageState extends State<HomePage> {
               ),
             ),
           ),
-          // Telekonsultasi Button
+          // Telekonsultasi Button - Navigate to Teleconsultation Page
           Expanded(
             child: InkWell(
               onTap: () => _navigateToPage(1),

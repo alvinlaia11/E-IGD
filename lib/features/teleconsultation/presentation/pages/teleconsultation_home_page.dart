@@ -126,17 +126,17 @@ class _TeleconsultationHomePageState extends State<TeleconsultationHomePage> {
         },
       ),
       floatingActionButton: FloatingActionButton.extended(
-        onPressed: () {
-          Navigator.push(
+        onPressed: () async {
+          await Navigator.push(
             context,
             MaterialPageRoute(
               builder: (context) => const ConsultationFormPage(),
             ),
-          ).then((_) {
-            if (mounted) {
-              context.read<ConsultationNotifier>().loadConsultations();
-            }
-          });
+          );
+          // Refresh setelah form ditutup
+          if (mounted) {
+            context.read<ConsultationNotifier>().loadConsultations();
+          }
         },
         backgroundColor: AppColors.triageHijau,
         icon: const Icon(Icons.add, color: Colors.white),
@@ -202,7 +202,7 @@ class _TeleconsultationHomePageState extends State<TeleconsultationHomePage> {
                     ),
                     SizedBox(height: 4),
                     Text(
-                      'Konsultasi dengan dokter secara virtual',
+                      'Konsultasi dengan dokter via WhatsApp',
                       style: TextStyle(
                         color: Colors.white70,
                         fontSize: 13,
@@ -214,68 +214,82 @@ class _TeleconsultationHomePageState extends State<TeleconsultationHomePage> {
             ],
           ),
           const SizedBox(height: 20),
-          Row(
-            children: [
-              Expanded(
-                child: _buildStatCard(
-                  'Total',
-                  notifier.totalCount.toString(),
-                  Icons.medical_information,
+          // Info Card
+          Container(
+            padding: const EdgeInsets.all(16),
+            decoration: BoxDecoration(
+              color: Colors.white.withOpacity(0.15),
+              borderRadius: BorderRadius.circular(12),
+              border: Border.all(
+                color: Colors.white.withOpacity(0.3),
+                width: 1,
+              ),
+            ),
+            child: Row(
+              children: [
+                const Icon(
+                  Icons.info_outline,
+                  color: Colors.white,
+                  size: 24,
+                ),
+                const SizedBox(width: 12),
+                const Expanded(
+                  child: Text(
+                    'Isi form konsultasi dan kirim ke WhatsApp untuk memulai konsultasi dengan dokter',
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontSize: 13,
+                      height: 1.4,
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+          const SizedBox(height: 16),
+          // Button Buat Konsultasi Baru
+          SizedBox(
+            width: double.infinity,
+            child: ElevatedButton.icon(
+              onPressed: () async {
+                await Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => const ConsultationFormPage(),
+                  ),
+                );
+                // Refresh setelah form ditutup
+                if (mounted) {
+                  context.read<ConsultationNotifier>().loadConsultations();
+                }
+              },
+              icon: const Icon(Icons.add_circle_outline, color: Colors.white),
+              label: const Text(
+                'Buat Konsultasi Baru',
+                style: TextStyle(
+                  color: Colors.white,
+                  fontWeight: FontWeight.bold,
+                  fontSize: 16,
                 ),
               ),
-              const SizedBox(width: 12),
-              Expanded(
-                child: _buildStatCard(
-                  'Aktif',
-                  notifier.activeCount.toString(),
-                  Icons.chat_bubble_outline,
+              style: ElevatedButton.styleFrom(
+                backgroundColor: Colors.white.withOpacity(0.2),
+                padding: const EdgeInsets.symmetric(vertical: 16),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(12),
+                  side: BorderSide(
+                    color: Colors.white.withOpacity(0.3),
+                    width: 1.5,
+                  ),
                 ),
               ),
-              const SizedBox(width: 12),
-              Expanded(
-                child: _buildStatCard(
-                  'Menunggu',
-                  notifier.waitingCount.toString(),
-                  Icons.access_time,
-                ),
-              ),
-            ],
+            ),
           ),
         ],
       ),
     );
   }
 
-  Widget _buildStatCard(String label, String value, IconData icon) {
-    return Container(
-      padding: const EdgeInsets.all(12),
-      decoration: BoxDecoration(
-        color: Colors.white.withOpacity(0.2),
-        borderRadius: BorderRadius.circular(12),
-      ),
-      child: Column(
-        children: [
-          Icon(icon, color: Colors.white, size: 24),
-          const SizedBox(height: 8),
-          Text(
-            value,
-            style: const TextStyle(
-              color: Colors.white,
-              fontSize: 20,
-              fontWeight: FontWeight.bold,
-            ),
-          ),
-          Text(
-            label,
-            style: const TextStyle(
-              color: Colors.white70,
-              fontSize: 11,
-            ),
-          ),
-        ],
-      ),
-    );
-  }
 
   Widget _buildSectionHeader(BuildContext context, String title, int count) {
     return Padding(

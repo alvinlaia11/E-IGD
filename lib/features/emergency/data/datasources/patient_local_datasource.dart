@@ -21,7 +21,7 @@ class PatientLocalDataSource {
 
     return await openDatabase(
       path,
-      version: 2,
+      version: 3, // Update to version 3 to include consultations table
       onCreate: _createDB,
       onUpgrade: _onUpgrade,
     );
@@ -32,7 +32,9 @@ class PatientLocalDataSource {
     const textType = 'TEXT NOT NULL';
     const integerType = 'INTEGER NOT NULL';
     const textNullableType = 'TEXT';
+    const integerNullableType = 'INTEGER';
 
+    // Create patients table
     await db.execute('''
       CREATE TABLE patients (
         id $idType,
@@ -53,6 +55,48 @@ class PatientLocalDataSource {
         status_ambulans $textNullableType
       )
     ''');
+
+    // Create consultations table for teleconsultation feature
+    await db.execute('''
+      CREATE TABLE consultations (
+        id $idType,
+        patient_id $integerNullableType,
+        patient_name $textType,
+        patient_phone $textNullableType,
+        patient_email $textNullableType,
+        doctor_id $integerNullableType,
+        doctor_name $textNullableType,
+        complaint $textType,
+        consultation_type $textType,
+        priority $textType,
+        status $textType,
+        diagnosis $textNullableType,
+        prescription $textNullableType,
+        recommendation $textNullableType,
+        referred_to_igd $integerType DEFAULT 0,
+        igd_patient_id $integerNullableType,
+        triage_level $textNullableType,
+        start_time $textType,
+        end_time $textNullableType,
+        duration $integerNullableType,
+        created_at $textType,
+        updated_at $textType
+      )
+    ''');
+
+    // Create consultation_messages table
+    await db.execute('''
+      CREATE TABLE consultation_messages (
+        id $idType,
+        consultation_id $integerType,
+        sender_id $integerType,
+        sender_type $textType,
+        message $textType,
+        message_type $textType DEFAULT 'text',
+        file_url $textNullableType,
+        timestamp $textType
+      )
+    ''');
   }
 
   Future<void> _onUpgrade(Database db, int oldVersion, int newVersion) async {
@@ -63,6 +107,55 @@ class PatientLocalDataSource {
       await db.execute('ALTER TABLE patients ADD COLUMN alamat_lengkap TEXT');
       await db.execute('ALTER TABLE patients ADD COLUMN nomor_telepon TEXT');
       await db.execute('ALTER TABLE patients ADD COLUMN status_ambulans TEXT');
+    }
+    if (oldVersion < 3) {
+      // Add consultations table for teleconsultation feature
+      const idType = 'INTEGER PRIMARY KEY AUTOINCREMENT';
+      const textType = 'TEXT NOT NULL';
+      const integerType = 'INTEGER NOT NULL';
+      const textNullableType = 'TEXT';
+      const integerNullableType = 'INTEGER';
+
+      await db.execute('''
+        CREATE TABLE IF NOT EXISTS consultations (
+          id $idType,
+          patient_id $integerNullableType,
+          patient_name $textType,
+          patient_phone $textNullableType,
+          patient_email $textNullableType,
+          doctor_id $integerNullableType,
+          doctor_name $textNullableType,
+          complaint $textType,
+          consultation_type $textType,
+          priority $textType,
+          status $textType,
+          diagnosis $textNullableType,
+          prescription $textNullableType,
+          recommendation $textNullableType,
+          referred_to_igd $integerType DEFAULT 0,
+          igd_patient_id $integerNullableType,
+          triage_level $textNullableType,
+          start_time $textType,
+          end_time $textNullableType,
+          duration $integerNullableType,
+          created_at $textType,
+          updated_at $textType
+        )
+      ''');
+
+      // Add consultation_messages table
+      await db.execute('''
+        CREATE TABLE IF NOT EXISTS consultation_messages (
+          id $idType,
+          consultation_id $integerType,
+          sender_id $integerType,
+          sender_type $textType,
+          message $textType,
+          message_type $textType DEFAULT 'text',
+          file_url $textNullableType,
+          timestamp $textType
+        )
+      ''');
     }
   }
 

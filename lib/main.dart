@@ -33,6 +33,11 @@ void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   // Initialize locale data for intl package
   await initializeDateFormatting('id_ID', null);
+  
+  // Initialize databases to ensure tables are created
+  await PatientLocalDataSource.instance.database;
+  await TeleconsultationLocalDataSource.instance.database;
+  
   runApp(const MyApp());
 }
 

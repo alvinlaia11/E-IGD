@@ -3,7 +3,7 @@ import 'package:provider/provider.dart';
 import '../../../../core/constants/app_colors.dart';
 import '../../../../core/constants/app_strings.dart';
 import '../../../../core/constants/consultation_enums.dart';
-import '../../../../core/widgets/primary_button.dart';
+import '../../../../core/utils/whatsapp_utils.dart';
 import '../../domain/entities/teleconsultation.dart';
 import '../providers/consultation_notifier.dart';
 
@@ -38,27 +38,53 @@ class _ConsultationFormPageState extends State<ConsultationFormPage> {
   Future<void> _submitForm() async {
     if (!_formKey.currentState!.validate()) return;
 
-    final now = DateTime.now();
-    final consultation = Teleconsultation(
-      patientName: _namaController.text.trim(),
-      patientPhone: _phoneController.text.trim().isEmpty ? null : _phoneController.text.trim(),
-      patientEmail: _emailController.text.trim().isEmpty ? null : _emailController.text.trim(),
-      complaint: _keluhanController.text.trim(),
-      consultationType: _selectedType,
-      priority: _selectedPriority,
-      status: ConsultationStatus.menunggu,
-      startTime: now,
-      createdAt: now,
-      updatedAt: now,
-    );
-
     try {
+      final now = DateTime.now();
+      
+      // Buat entity konsultasi
+      final consultation = Teleconsultation(
+        patientName: _namaController.text.trim(),
+        patientPhone: _phoneController.text.trim().isEmpty 
+            ? null 
+            : _phoneController.text.trim(),
+        patientEmail: _emailController.text.trim().isEmpty 
+            ? null 
+            : _emailController.text.trim(),
+        complaint: _keluhanController.text.trim(),
+        consultationType: _selectedType,
+        priority: _selectedPriority,
+        status: ConsultationStatus.menunggu,
+        startTime: now,
+        createdAt: now,
+        updatedAt: now,
+      );
+
+      // Simpan ke database terlebih dahulu
       await context.read<ConsultationNotifier>().createNewConsultation(consultation);
+
+      // Setelah berhasil disimpan, kirim ke WhatsApp
+      await WhatsAppUtils.openWhatsAppWithConsultation(
+        nama: _namaController.text.trim(),
+        phone: _phoneController.text.trim().isEmpty 
+            ? null 
+            : _phoneController.text.trim(),
+        email: _emailController.text.trim().isEmpty 
+            ? null 
+            : _emailController.text.trim(),
+        keluhan: _keluhanController.text.trim(),
+        jenisKonsultasi: _selectedType.displayName,
+        prioritas: _selectedPriority.displayName,
+        informasiTambahan: _infoTambahanController.text.trim().isEmpty 
+            ? null 
+            : _infoTambahanController.text.trim(),
+      );
+
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(
-            content: Text(AppStrings.konsultasiBerhasilDibuat),
+            content: Text('Konsultasi berhasil dibuat dan dikirim ke WhatsApp'),
             backgroundColor: AppColors.triageHijau,
+            duration: Duration(seconds: 2),
           ),
         );
         Navigator.pop(context);
@@ -67,8 +93,9 @@ class _ConsultationFormPageState extends State<ConsultationFormPage> {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text('Gagal membuat konsultasi: $e'),
+            content: Text('Gagal: $e'),
             backgroundColor: Colors.red,
+            duration: const Duration(seconds: 3),
           ),
         );
       }
@@ -105,7 +132,7 @@ class _ConsultationFormPageState extends State<ConsultationFormPage> {
                 ),
                 child: Row(
                   children: [
-                    Icon(Icons.medical_services, color: AppColors.triageHijau, size: 32),
+                    const Icon(Icons.medical_services, color: AppColors.triageHijau, size: 32),
                     const SizedBox(width: 12),
                     const Expanded(
                       child: Text(
@@ -223,29 +250,52 @@ class _ConsultationFormPageState extends State<ConsultationFormPage> {
                 maxLines: 3,
               ),
               const SizedBox(height: 32),
-              // Buttons
-              Row(
-                children: [
-                  Expanded(
-                    child: OutlinedButton(
-                      onPressed: () => Navigator.pop(context),
-                      style: OutlinedButton.styleFrom(
-                        padding: const EdgeInsets.symmetric(vertical: 16),
-                        side: BorderSide(color: AppColors.triageHijau),
-                      ),
-                      child: const Text(AppStrings.batal),
+              // Button Kirim ke WhatsApp
+              SizedBox(
+                width: double.infinity,
+                child: ElevatedButton.icon(
+                  onPressed: _submitForm,
+                  icon: const Icon(Icons.send, color: Colors.white),
+                  label: const Text(
+                    'Kirim ke WhatsApp',
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontWeight: FontWeight.bold,
+                      fontSize: 16,
                     ),
                   ),
-                  const SizedBox(width: 16),
-                  Expanded(
-                    flex: 2,
-                    child: PrimaryButton(
-                      text: AppStrings.mulaiKonsultasi,
-                      backgroundColor: AppColors.triageHijau,
-                      onPressed: _submitForm,
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: AppColors.triageHijau,
+                    padding: const EdgeInsets.symmetric(vertical: 16),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                    elevation: 4,
+                  ),
+                ),
+              ),
+              const SizedBox(height: 12),
+              // Button Batal
+              SizedBox(
+                width: double.infinity,
+                child: OutlinedButton(
+                  onPressed: () => Navigator.pop(context),
+                  style: OutlinedButton.styleFrom(
+                    padding: const EdgeInsets.symmetric(vertical: 16),
+                    side: const BorderSide(color: AppColors.triageHijau, width: 2),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(12),
                     ),
                   ),
-                ],
+                  child: const Text(
+                    AppStrings.batal,
+                    style: TextStyle(
+                      color: AppColors.triageHijau,
+                      fontWeight: FontWeight.bold,
+                      fontSize: 16,
+                    ),
+                  ),
+                ),
               ),
             ],
           ),
